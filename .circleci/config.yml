@@ -22,6 +22,7 @@ jobs:
       - image: circleci/python:3.8.5-buster
 
     steps:
+      - checkout
       - run:
           name: Checkout Git tag
           command: git checkout << pipeline.parameters.tag >>
