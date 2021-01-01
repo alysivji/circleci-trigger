@@ -1,0 +1,47 @@
+version: 2.1
+
+parameters:
+  deploy:
+    description: Should we deploy
+    type: boolean
+    default: false
+  environment:
+    description: Environment to deploy to
+    type: enum
+    enum: ["development", "production"]
+    default: "development"
+  tag:
+    description: Version to deploy
+    type: string
+    default: "0.0"
+
+jobs:
+
+  build_tag_test_and_deploy:
+    docker:
+      - image: circleci/python:3.8.5-buster
+
+    steps:
+      - run:
+          name: Checkout Git tag
+          command: git checkout << pipeline.parameters.tag >>
+      - run:
+          name: Echo
+          command: echo hi world
+      - run:
+          name: echo environment
+          command: echo << pipeline.parameters.environment >>
+      - run:
+          name: echo deploy
+          command: echo << pipeline.parameters.deploy >>
+      - run:
+          name: echo tag
+          command: echo << pipeline.parameters.tag >>
+
+workflows:
+  version: 2
+
+  deploy:
+    jobs:
+      - build_tag_test_and_deploy
+    when: << pipeline.parameters.deploy >>
